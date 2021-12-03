@@ -24,8 +24,6 @@ conv(x) = parse(Int, x, base=2)
 answer = conv(bests)*conv(worsts)
 println(answer)
 
-test(list, target, index) = filter(w -> w[index] == target[index], list)
-
 function runthrough(list, high)
 	i = 1
 	while size(list)[1] > 1

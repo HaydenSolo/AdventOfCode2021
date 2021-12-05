@@ -39,9 +39,6 @@ function getfull(line::Line)
 		return full
 	end
 
-	xdistance = line.finish.x - line.start.x
-	ydistance = line.finish.y - line.start.y
-
 	xstep = line.finish.x > line.start.x ? 1 : -1
 	ystep = line.finish.y > line.start.y ? 1 : -1
 

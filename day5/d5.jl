@@ -25,7 +25,6 @@ full = map(line -> Line(map(a -> Point(a), line)), full)
 
 allpoints = []
 
-println(full[1])
 visited = Set{Point}()
 visitedcounted = Set{Point}()
 doubles = 0

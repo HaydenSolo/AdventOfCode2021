@@ -30,6 +30,19 @@ function reverse(solution::Solution)
 	return rev
 end
 
+function containedin(original, news)
+	for f in news
+		correct = true
+		for n in original
+			correct &= n in f
+		end
+		if correct
+			news = filter(i -> i != f, news)
+			return f, news
+		end
+	end
+end
+
 function getmapping(uniques)
 	solution = Solution()
 	for u in uniques
@@ -40,23 +53,13 @@ function getmapping(uniques)
 	end
 	
 	fives = filter(i -> length(i) == 5, uniques)
+	sixes = filter(i -> length(i) == 6, uniques) 
 
-	# Finds 3
 	one = solution[1]
-	for f in fives
-		correct = true
-		for n in one
-			correct &= n in f
-		end
-		if correct
-			solution[3] = f
-			fives = filter(i -> i != f, fives)
-			break
-		end
-	end
-	
-
 	four = solution[4]
+	
+	solution[3], fives = containedin(one, fives)
+
 	# Finds 5
 	for f in fives
 		total = 0
@@ -69,35 +72,10 @@ function getmapping(uniques)
 			break
 		end
 	end
+
 	solution[2] = fives[1]
-
-	sixes = filter(i -> length(i) == 6, uniques) 
-
-	# Finds 9
-	for f in sixes
-		correct = true
-		for n in four
-			correct &= n in f
-		end
-		if correct
-			solution[9] = f
-			sixes = filter(i -> i != f, sixes)
-			break
-		end
-	end
-
-	# Finds 0
-	for f in sixes
-		correct = true
-		for n in one
-			correct &= n in f
-		end
-		if correct
-			solution[0] = f
-			sixes = filter(i -> i != f, sixes)
-			break
-		end
-	end
+	solution[9], sixes = containedin(four, sixes)
+	solution[0], sixes = containedin(one, sixes)
 	solution[6] = sixes[1]
 
 	return reverse(solution)
@@ -128,13 +106,3 @@ end
 
 deductions = deduce.(data)
 println(sum(deductions))
-
-# coun = 0
-# for line in digit, d in line
-# 	len = length(d)
-# 	if len == 2 || len == 3 || len == 4 || len == 7
-# 		global coun += 1
-# 	end
-# end
-
-# println(coun)

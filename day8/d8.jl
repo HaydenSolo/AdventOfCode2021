@@ -13,18 +13,14 @@ Base.length(iter::Solution) = 10
 function getdefined(solution::Solution)
 	defined = Dict{Int, String}()
 	for (i, v) in solution
-		if v !== missing
-			defined[i] = v
-		end
+		v === missing || (defined[i] = v)
 	end
 	return defined
 end
 Base.show(io::IO, solution::Solution) = print(io, getdefined(solution))
 function reverse(solution::Solution)
 	rev = Vector{Pair{Set{Char}, Int}}()
-	# rev = Dict{Set{Char}, Int}()
 	for (k, v) in collect(getdefined(solution))
-		# rev[Set(v)] = k
 		push!(rev, Pair(Set(v), k))
 	end
 	return rev

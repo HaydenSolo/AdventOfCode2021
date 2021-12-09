@@ -3,10 +3,7 @@ const data = map(line -> parse.(Int, line), split.(readlines("input.txt"), ""))
 imax = length(data)
 jmax = length(data[1])
 
-function low(data, i, j)
-	current = data[i][j]
-	return (i == 1 || current < data[i-1][j]) && (i == imax || current < data[i+1][j]) && (j == 1 || current < data[i][j-1]) && (j == jmax || current < data[i][j+1])
-end
+low(data, i, j) = (current = data[i][j]; (i == 1 || current < data[i-1][j]) && (i == imax || current < data[i+1][j]) && (j == 1 || current < data[i][j-1]) && (j == jmax || current < data[i][j+1]))
 
 function basin(data, i, j, visited)
 	current = data[i][j]

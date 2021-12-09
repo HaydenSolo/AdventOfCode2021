@@ -32,5 +32,4 @@ end
 
 sorted = sort(basins, rev=true)
 firstthree = sorted[1:3]
-test = [data[i][j] for i in 1:imax, j in 1:jmax if data[i][j] != 9]
 println(firstthree[1]*firstthree[2]*firstthree[3])

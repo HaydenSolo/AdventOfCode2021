@@ -17,7 +17,6 @@ function basin(data, i, j, visited)
 	return total
 end
 
-
 lowpoints = []
 for i in 1:imax, j in 1:jmax
 	low(data, i, j) && (push!(lowpoints, (i, j)))

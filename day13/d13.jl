@@ -70,7 +70,7 @@ points = Point.(lines[1:ind-1])
 folds = foldsplit.(lines[ind+1:end])
 
 parsefold(fold) = (sfold = split(fold, "="); (sfold[1], parse(Int, sfold[2])))
-
 parsedfolds = parsefold.(folds)
+
 finalpoints = runfolds(points, parsedfolds)
 printpoints(finalpoints)

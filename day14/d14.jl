@@ -16,13 +16,21 @@ end
 
 function step(polymer, rules)
 	newpolymer::Vector{Char} = []
-	for (first, second) in zip(polymer[1:end-1], polymer[2:end])
+	for i in 1:length(polymer)-1
+		first = polymer[i]
+		second = polymer[i+1]
 		key = first*second
-		# newpolymer *= first
 		push!(newpolymer, first)
-		# haskey(rules, key) && (newpolymer *= rules[key])
 		haskey(rules, key) && push!(newpolymer, rules[key])
 	end
+
+	# for (first, second) in zip(polymer[1:end-1], polymer[2:end])
+	# 	key = first*second
+	# 	# newpolymer *= first
+	# 	push!(newpolymer, first)
+	# 	# haskey(rules, key) && (newpolymer *= rules[key])
+	# 	haskey(rules, key) && push!(newpolymer, rules[key])
+	# end
 	# newpolymer *= polymer[end]
 	push!(newpolymer, polymer[end])
 	return String(newpolymer)

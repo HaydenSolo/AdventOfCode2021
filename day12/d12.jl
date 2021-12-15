@@ -79,3 +79,4 @@ function getpaths(caves::Dict{String, Cave})
 end
 
 getpaths(caves)
+println(methods(visit))

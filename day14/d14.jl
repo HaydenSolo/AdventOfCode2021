@@ -1,60 +1,58 @@
 const data = readlines("input.txt")
 
-# struct Rule
-# 	from::String
-# 	to::String
-# end
-# Rule(str::String) = Rule(string(str[1:2]), string(str[7]))
-
 function getrules(rules)
-	ruledict = Dict{String, Char}()
+	ruledict = Dict{Tuple{Char, Char}, Char}()
+	countdict = Dict{Tuple{Char, Char}, Int}()
+	elements = Set{Char}()
 	for rule in rules
-		ruledict[string(rule[1:2])] = rule[7]
+		key = (rule[1], rule[2])
+		ruledict[key] = rule[7]
+		countdict[key] = 0
+		push!(elements, rule[1])
+		push!(elements, rule[2])
 	end
-	return ruledict
+	return ruledict, countdict, elements
 end
 
-function step(polymer, rules)
-	newpolymer::Vector{Char} = []
-	for i in 1:length(polymer)-1
-		first = polymer[i]
-		second = polymer[i+1]
-		key = first*second
-		push!(newpolymer, first)
-		haskey(rules, key) && push!(newpolymer, rules[key])
+function step(counts, rules)
+	newcounts = Dict{Tuple{Char, Char}, Int}(key => 0 for key in keys(counts))
+	for key in keys(counts)
+		c1, c2 = key
+		newchar = rules[key]
+		count = counts[key]
+		newcounts[(c1, newchar)] += count
+		newcounts[(newchar, c2)] += count
 	end
-
-	# for (first, second) in zip(polymer[1:end-1], polymer[2:end])
-	# 	key = first*second
-	# 	# newpolymer *= first
-	# 	push!(newpolymer, first)
-	# 	# haskey(rules, key) && (newpolymer *= rules[key])
-	# 	haskey(rules, key) && push!(newpolymer, rules[key])
-	# end
-	# newpolymer *= polymer[end]
-	push!(newpolymer, polymer[end])
-	return String(newpolymer)
+	return newcounts
 end
 
-function runsteps(polymer, rules, steps)
+function runsteps(counts, rules, steps)
 	for i in 1:steps
-		polymer = step(polymer, rules)
-		println("Done step $i with length $(length(polymer))")
+		counts = step(counts, rules)
 	end
-	return polymer
+	return counts
 end
-
-count(polymer::String, char::Char) = Base.count(i -> i==char, polymer)
-
-# function match(rules::Vector{Rule}, str)
 
 polymer = data[1]
-rules = getrules(data[3:end])
+rules, counts, elements = getrules(data[3:end])
 
-
-polymer = runsteps(polymer, rules, 40)
-counts = Vector{Int}()
-for char in Set(polymer)
-	push!(counts, count(polymer, char))
+for key in zip(polymer[1:end-1], polymer[2:end])
+	counts[key] += 1
 end
-println(maximum(counts) - minimum(counts))
+
+counts = runsteps(counts, rules, 40)
+
+elementcount = Dict(e => 0 for e in elements)
+elementcount[polymer[1]] += 1
+elementcount[polymer[end]] += 1
+
+for ((c1, c2), v) in counts
+	elementcount[c1] += v
+	elementcount[c2] += v
+end
+
+for k in keys(elementcount)
+	elementcount[k] /= 2
+end
+
+println(maximum(values(elementcount)) - minimum(values(elementcount)))
